@@ -43,22 +43,29 @@ class NuScenesMapDataset(Dataset):
 
     def get_tokens(self, scene_names=None):
         # Iterate over scenes
-        labeled_sample_per_scene = int(self.label_percent * 40)
+        lb_split = round(self.label_percent * len(scene_names))
+        LB_SCENES = scene_names[:lb_split]
+        UNLB_SCENES = scene_names[lb_split:]
+    
+        # labeled_sample_per_scene = int(self.label_percent * 40)
         for scene in self.nuscenes.scene:
             # Ignore scenes which don't belong to the current split
             if scene_names is not None and scene['name'] not in scene_names:
                 continue
-            num_of_sample = 0
-            for sample in iterate_samples(self.nuscenes, scene['first_sample_token']):
-                if self.is_train and self.label_percent < 1:  # training set under semi-setting
-                    num_of_sample += 1
-                    if (self.labeled_data is True) and (num_of_sample == labeled_sample_per_scene + 1):
-                        break
-                    elif (self.labeled_data is False) and (num_of_sample <= labeled_sample_per_scene):
-                        continue
-                # Iterate over cameras
-                for camera in CAMERA_NAMES:
-                    self.tokens.append(sample['data'][camera])
+            if self.labeled_data is True:
+                if scene['name'] not in LB_SCENES:
+                    continue
+                for sample in iterate_samples(self.nuscenes, scene['first_sample_token']):
+                    # Iterate over cameras
+                    for camera in CAMERA_NAMES:
+                        self.tokens.append(sample['data'][camera])
+            if self.labeled_data is False:
+                if scene['name'] not in UNLB_SCENES:
+                    continue
+                for sample in iterate_samples(self.nuscenes, scene['first_sample_token']):
+                    # Iterate over cameras
+                    for camera in CAMERA_NAMES:
+                        self.tokens.append(sample['data'][camera])
 
     def __len__(self):
         return len(self.tokens)

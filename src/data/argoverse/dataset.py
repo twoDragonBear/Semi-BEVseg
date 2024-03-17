@@ -39,6 +39,10 @@ class ArgoverseMapDataset(Dataset):
 
     def preload(self, split, loader, log_names=None):
         # Iterate over sequences
+        lb_split = round(self.label_percent * len(log_names))
+        LB_SCENES = log_names[:lb_split]
+        UNLB_SCENES = log_names[lb_split:]
+        
         for log in loader:
             # Check if the log is within the current dataset split
             logid = log.current_log
@@ -51,19 +55,35 @@ class ArgoverseMapDataset(Dataset):
 
                 if camera not in RING_CAMERA_LIST:
                     continue
-
-                # Load image paths
+                
                 if self.is_train and (self.label_percent < 1):  # training set under semi-setting
-                    n = round(len(timestamps) * self.label_percent)
                     if self.labeled_data:
-                        for timestamp in timestamps[:n]:
-                            self.examples.append((timestamp, split, logid, camera))
-                    else:
-                        for timestamp in timestamps[n:]:
-                            self.examples.append((timestamp, split, logid, camera))
+                        if logid not in LB_SCENES:
+                            continue
+                        for timestamp in timestamps:
+                             self.examples.append((timestamp, split, logid, camera))
+                    if self.labeled_data is False:
+                        if logid not in UNLB_SCENES:
+                            continue
+                        for timestamp in timestamps:
+                             self.examples.append((timestamp, split, logid, camera))
+                        
                 else:
                     for timestamp in timestamps:
                         self.examples.append((timestamp, split, logid, camera))
+
+                # Load image paths
+                # if self.is_train and (self.label_percent < 1):  # training set under semi-setting
+                #     n = round(len(timestamps) * self.label_percent)
+                #     if self.labeled_data:
+                #         for timestamp in timestamps[:n]:
+                #             self.examples.append((timestamp, split, logid, camera))
+                #     else:
+                #         for timestamp in timestamps[n:]:
+                #             self.examples.append((timestamp, split, logid, camera))
+                # else:
+                #     for timestamp in timestamps:
+                #         self.examples.append((timestamp, split, logid, camera))
 
 
     def __len__(self):
@@ -132,7 +152,8 @@ class ArgoverseMapDataset(Dataset):
 
     def load_labels(self, split, log, camera, timestamp):
         # Construct label path from example data
-        label_path = os.path.join(self.label_root, split, log, camera, f'{camera}_{timestamp}.png')
+        # label_path = os.path.join(self.label_root, split, log, camera, f'{camera}_{timestamp}.png')
+        label_path = os.path.join(self.label_root, log, camera, f'{camera}_{timestamp}.png')
         
         # Load encoded label image as a torch tensor
         encoded_labels = to_tensor(Image.open(label_path)).long()
