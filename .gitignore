@@ -1,0 +1,8 @@
+*.pyc
+*.log
+
+logs/
+
+nuScenes
+argoverse
+.vscode/
