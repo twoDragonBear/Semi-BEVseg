@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.hub import load_state_dict_from_url
-from resnet import ResNetLayer
+from src.models.resnet import ResNetLayer
 
 
 class FPN(nn.Module):

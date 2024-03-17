@@ -17,8 +17,8 @@ import torchvision
 import warnings
 warnings.filterwarnings("ignore")
 
-from fpn import FPN50
-from resnet import ResNetLayer
+from src.models.fpn import FPN50
+from src.models.resnet import ResNetLayer
 
 
 class Resampler(nn.Module):
