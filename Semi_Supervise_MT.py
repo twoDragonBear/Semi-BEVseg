@@ -30,10 +30,15 @@ from src.utils.confusion import BinaryConfusionMatrix
 from src.data.nuscenes.utils import NUSCENES_CLASS_NAMES
 from src.data.argoverse.utils import ARGOVERSE_CLASS_NAMES
 from src.utils.visualise import colorise
-
+import cv2
+cv2.setNumThreads(1)
 
 color_aug = torchvision.transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5)
 
+# os.environ["WORLD_SIZE"] = "1"
+# os.environ['MASTER_ADDR'] = 'localhost'  # 设置主节点的地址
+# os.environ['MASTER_PORT'] = '1234' 
+# os.environ['RANK']='0'
 
 def cycle(iterable):
     iterator = iter(iterable) 
@@ -345,6 +350,7 @@ def main():
         print('num of trainable parameters =', sum(p.numel() for p in bev_seg_teacher_model.parameters() if p.requires_grad))
 
     config['enable_conjoint_rotataion'] = args.enable_conjoint_rotataion
+    # labeled_train_data, unlabeled_train_data,test_data = build_semiAr_datasets(config)
     labeled_train_data, unlabeled_train_data,test_data = build_semiNu_datasets(config)
 
     train_sampler1 = DistributedSampler(labeled_train_data)

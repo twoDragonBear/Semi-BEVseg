@@ -182,7 +182,9 @@ def display_results(confusion, dataset):
     torch.distributed.barrier()
 
     # Display confusion matrix summary
-    class_names = NUSCENES_CLASS_NAMES if dataset == 'nuscenes' else ARGOVERSE_CLASS_NAMES
+    # class_names = NUSCENES_CLASS_NAMES if dataset == 'nuscenes' else ARGOVERSE_CLASS_NAMES
+    # class_names = ARGOVERSE_CLASS_NAMES
+    class_names = NUSCENES_CLASS_NAMES
 
     iou = confusion.iou.cuda().clone()
     torch.distributed.all_reduce(iou, op=torch.distributed.ReduceOp.SUM)
@@ -315,6 +317,7 @@ def main():
         print('num of trainable parameters =', sum(p.numel() for p in bev_seg_model.parameters() if p.requires_grad))
 
     config['enable_conjoint_rotataion'] = False
+    # labeled_train_data, unlabeled_train_data,test_data = build_semiAr_datasets(config)
     labeled_train_data, unlabeled_train_data,test_data = build_semiNu_datasets(config)
 
     train_sampler1 = DistributedSampler(labeled_train_data)

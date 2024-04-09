@@ -1,6 +1,6 @@
 ########################### Training options ###########################
 # Number of examples per mini-batch
-batch_size: 32
+batch_size: 12
 
 # Number of dataloader threads
 num_workers: 64
@@ -44,13 +44,13 @@ nuscenes_train_split: train
 nuscenes_val_split: val
 
 # Root data directory
-nuscenes_dataroot: /media/zjy/datasets3/nuscenes
+nuscenes_dataroot: /root/autodl-fs/Semi-BEVseg/datasets/nuscenes
 
 # NuScenes dataset version
 nuscenes_version: v1.0-trainval
 
 # Directory containing pregenerated training labels
-nuscenes_label_root: /media/zjy/datasets3/nuscenes/map-labels
+nuscenes_label_root: /root/autodl-fs/Semi-BEVseg/datasets/MonoMaps
 #########################################################################
 
 ########################### Argoverse Option ############################
@@ -64,10 +64,10 @@ argoverse_train_split: train
 argoverse_val_split: val
 
 # Root data directory
-argoverse_dataroot: /media/zjy/datasets3/argoverse/argoverse-tracking
+argoverse_dataroot: /root/autodl-fs/argoverse-tracking
 
 # Directory containing pregenerated training labels
-argoverse_label_root: /media/zjy/datasets3/argoverse/map-labels
+argoverse_label_root: /root/autodl-fs/argoverse-tracking/labels
 #########################################################################
 
 ########################### PON Model options ###########################

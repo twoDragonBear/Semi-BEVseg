@@ -59,7 +59,7 @@ def build_semiNu_datasets(config):
   
 
 #==================================================================================================
-'''
+
 def build_fullAr_datasets(config):
     print('==> Loading Argoverse training dataset...')
     dataroot = os.path.expandvars(config.argoverse_dataroot)
@@ -81,8 +81,10 @@ def build_semiAr_datasets(config):
     dataroot = os.path.expandvars(config.argoverse_dataroot)
     # Load native argoverse splits
     loaders = {
-        'train': ArgoverseTrackingLoader(os.path.join(dataroot, 'train')),
-        'val': ArgoverseTrackingLoader(os.path.join(dataroot, 'val'))
+        # 'train': ArgoverseTrackingLoader(os.path.join(dataroot, 'train')),
+        # 'val': ArgoverseTrackingLoader(os.path.join(dataroot, 'val'))
+        'train': ArgoverseTrackingLoader(os.path.join(dataroot, 'scene')),
+        'val': ArgoverseTrackingLoader(os.path.join(dataroot, 'scene')),
     }
     
     argoverse_labeled_train_data = ArgoverseMapDataset(loaders, config.argoverse_label_root, config.img_size, TRAIN_LOGS,
@@ -101,8 +103,10 @@ def build_ArAndUnlabeledNu_datasets(config):
     dataroot = os.path.expandvars(config.argoverse_dataroot)
     # Load native argoverse splits
     loaders = {
-        'train': ArgoverseTrackingLoader(os.path.join(dataroot, 'train')),
-        'val': ArgoverseTrackingLoader(os.path.join(dataroot, 'val'))
+        # 'train': ArgoverseTrackingLoader(os.path.join(dataroot, 'train')),
+        # 'val': ArgoverseTrackingLoader(os.path.join(dataroot, 'val'))
+        'train': ArgoverseTrackingLoader(os.path.join(dataroot, 'scene')),
+        'val': ArgoverseTrackingLoader(os.path.join(dataroot, 'scene')),
     }
     
     argoverse_labeled_train_data = ArgoverseMapDataset(loaders, config.argoverse_label_root, config.img_size, TRAIN_LOGS, is_train=True, labeled_data=True)
@@ -115,5 +119,3 @@ def build_ArAndUnlabeledNu_datasets(config):
     argoverse_test_data = ArgoverseMapDataset(loaders, config.argoverse_label_root, config.img_size, VAL_LOGS, is_train=False)
     
     return argoverse_labeled_train_data, nuscenes_unlabeled_train_data, argoverse_test_data
-'''
- 
